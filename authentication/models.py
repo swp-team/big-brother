@@ -46,7 +46,7 @@ class User(AbstractBaseUser):
 
     def __str__(self):
         return '{first_name} {second_name} <{email}>'.format(
-            frst_name=self.first_name,
+            first_name=self.first_name,
             second_name=self.second_name,
             email=self.email,
         )
