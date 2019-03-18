@@ -11,6 +11,7 @@ https://docs.djangoproject.com/en/2.1/ref/settings/
 """
 
 import os
+from datetime import timedelta
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -37,8 +38,10 @@ INSTALLED_APPS = [
     # Third-party apps
     'rest_framework',
     'corsheaders',
+    'rest_framework_simplejwt.token_blacklist',
     # Project apps
     'authentication',
+    'tracking',
 ]
 
 MIDDLEWARE = [
@@ -52,10 +55,31 @@ ROOT_URLCONF = 'big_brother.urls'
 WSGI_APPLICATION = 'big_brother.wsgi.application'
 
 
-# CORS configuration
+# CORS headers
 # https://github.com/ottoyiu/django-cors-headers
 
 CORS_ORIGIN_ALLOW_ALL = DEBUG
+
+
+# Rest framework
+# https://www.django-rest-framework.org/
+
+REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES': (
+        'rest_framework_simplejwt.authentication.JWTAuthentication',
+    ),
+}
+
+
+# Simple JWT
+# https://github.com/davesque/django-rest-framework-simplejwt
+
+SIMPLE_JWT = {
+    'ACCESS_TOKEN_LIFETIME': timedelta(hours=1),
+    'REFRESH_TOKEN_LIFETIME': timedelta(days=7),
+    'ROTATE_REFRESH_TOKENS': True,
+    'BLACKLIST_AFTER_ROTATION': True,
+}
 
 
 # Database
