@@ -37,6 +37,8 @@ INSTALLED_APPS = [
     # Third-party apps
     'rest_framework',
     'corsheaders',
+    # Project apps
+    'authentication',
 ]
 
 MIDDLEWARE = [
@@ -51,6 +53,7 @@ WSGI_APPLICATION = 'big_brother.wsgi.application'
 
 
 # CORS configuration
+# https://github.com/ottoyiu/django-cors-headers
 
 CORS_ORIGIN_ALLOW_ALL = DEBUG
 
@@ -65,6 +68,11 @@ DATABASES = {
     }
 }
 
+
+# Authentication user model
+# https://docs.djangoproject.com/en/2.1/topics/auth/customizing/
+
+AUTH_USER_MODEL = 'authentication.User'
 
 # Password validation
 # https://docs.djangoproject.com/en/2.1/ref/settings/#auth-password-validators
