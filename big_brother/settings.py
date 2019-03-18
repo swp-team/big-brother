@@ -36,9 +36,11 @@ INSTALLED_APPS = [
     'django.contrib.contenttypes',
     # Third-party apps
     'rest_framework',
+    'corsheaders',
 ]
 
 MIDDLEWARE = [
+    'corsheaders.middleware.CorsMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'django.middleware.common.CommonMiddleware',
 ]
@@ -46,6 +48,11 @@ MIDDLEWARE = [
 ROOT_URLCONF = 'big_brother.urls'
 
 WSGI_APPLICATION = 'big_brother.wsgi.application'
+
+
+# CORS configuration
+
+CORS_ORIGIN_ALLOW_ALL = DEBUG
 
 
 # Database
