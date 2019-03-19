@@ -16,7 +16,8 @@ class Activity(models.Model):
     name = models.CharField(max_length=128)
     start = models.DateTimeField()
     end = models.DateTimeField(null=True, blank=True)
-    tags = models.ManyToManyField(Tag, related_name='activities')
+    tags = models.ManyToManyField(Tag, related_name='activities',
+                                  blank=True)
     user = models.ForeignKey(
         'authentication.User',
         related_name='activities',

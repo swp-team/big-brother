@@ -41,7 +41,7 @@ export class ApiService {
   }
 
   getTag(id: number): Observable<Tag> {
-    return this.http.get<Tag>(`/api/tags/${id}`);
+    return this.http.get<Tag>(`/api/tags/${id}/`);
   }
 
   postTags(name: string): Observable<Tag> {
@@ -59,7 +59,7 @@ export class ApiService {
   }
 
   getActivity(id: number): Observable<Activity> {
-    return this.http.get<RawActivity>(`/api/activities/${id}`).pipe(
+    return this.http.get<RawActivity>(`/api/activities/${id}/`).pipe(
       map(x => this._deserialize(x)),
     );
   }
@@ -73,13 +73,13 @@ export class ApiService {
 
   patchActivities(a: Activity): Observable<Activity> {
     return this.http.patch<RawActivity>(
-      `/api/activities/${a.id}`,
+      `/api/activities/${a.id}/`,
       this._serialize(a),
     ).pipe(map(x => this._deserialize(x)));
   }
 
   deleteActivity(id: number): Observable<any> {
-    return this.http.delete<any>(`/api/activities/${id}`);
+    return this.http.delete<any>(`/api/activities/${id}/`);
   }
 
   private _deserialize(a: RawActivity): Activity {

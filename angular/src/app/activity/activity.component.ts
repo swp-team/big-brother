@@ -42,9 +42,7 @@ export class ActivityComponent implements OnInit {
     this.clockSubscription = interval(1000).subscribe(() => {
       this.tracked.duration = new Duration(this.tracked.start);
     });
-    this.api.postActivities(this.tracked).subscribe(
-      x => this.tracked = x,
-    );
+    this.api.postActivities(this.tracked).subscribe();
   }
 
   stop() {
