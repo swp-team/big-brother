@@ -32,7 +32,7 @@ VOLUME ["/tmp/sockets/"]
 EXPOSE "8080"
 
 COPY $CONTEXT/config /etc/nginx
-COPY --from=angular /app/dist/hela-ng /var/www/ng
+COPY --from=angular /app/dist/big-brother /var/www/ng
 COPY ./docker/nginx-entrypoint.sh ./docker-entrypoint.sh
 
 ENTRYPOINT ["bash", "docker-entrypoint.sh"]

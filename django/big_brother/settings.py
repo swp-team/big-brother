@@ -136,7 +136,6 @@ LOGGING = {
     'handlers': {
         'console': {
             'class': 'logging.StreamHandler',
-            'filters': ['testing'],
             'formatter': 'default',
         },
     },
@@ -146,7 +145,7 @@ LOGGING = {
             'handlers': ['console'],
             'propagate': False,
         },
-        'project_manager': {
+        'tracking': {
             'level': os.environ['DJANGO_LOGGING_LEVEL'],
             'handlers': ['console'],
             'propagate': False,

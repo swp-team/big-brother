@@ -100,9 +100,9 @@ export class ApiService {
     if (a.id !== null) b.id = a.id;
     b.name = a.name;
     b.tags = a.tags;
-    b.start = formatDate(a.start, 'YYYY-MM-DDThh:mm:ssTZD', 'en');
+    b.start = formatDate(a.start, 'yyyy-MM-ddTHH:mm:ss\ZZ', 'en');
     if (a.end !== null) {
-      b.end = formatDate(a.end, 'YYYY-MM-DDThh:mm:ssTZD', 'en');
+      b.end = formatDate(a.end, 'yyyy-MM-ddTHH:mm:ss\ZZ', 'en');
     }
     return b;
   }
