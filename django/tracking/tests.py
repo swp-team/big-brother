@@ -4,14 +4,13 @@ from django.test import TestCase
 from django.urls import reverse
 from django.utils import timezone
 from django.db import IntegrityError
-from django.core.exceptions import ValidationError
 
 from rest_framework import status
 from rest_framework.test import APITestCase
 
 from authentication.models import User
 
-from .models import Tag, Activity, ActivityTagBinding
+from .models import Activity
 
 
 class ActivityModelTestCase(TestCase):
@@ -28,14 +27,6 @@ class ActivityModelTestCase(TestCase):
             second_name="Scott",
             password='qwerty123',
         )
-        self.first_user_tag = Tag.objects.create(
-            name='daniel_tag',
-            user=self.first_user,
-        )
-        self.second_user_tag = Tag.objects.create(
-            name='andrew_tag',
-            user=self.second_user,
-        )
 
     def test_start_and_end_constraint(self):
         with self.assertRaises(IntegrityError):
@@ -43,18 +34,6 @@ class ActivityModelTestCase(TestCase):
                 name='SWP sprint',
                 start=timezone.now(),
                 end=timezone.now() - timedelta(days=1),
-            )
-
-    def test_tags_contraint(self):
-        activity = Activity.objects.create(
-            name='Just Simple Activity',
-            start=timezone.now(),
-            user=self.first_user,
-        )
-        with self.assertRaises(ValidationError):
-            ActivityTagBinding.objects.create(
-                activity=activity,
-                tag=self.second_user_tag,
             )
 
 
