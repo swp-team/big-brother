@@ -1,0 +1,39 @@
+FROM node:10 as angular
+
+ARG CONTEXT=angular
+
+WORKDIR /app/
+
+COPY $CONTEXT/package*.json ./
+
+RUN npm ci;
+
+COPY $CONTEXT .
+
+RUN npm run build -- --prod
+
+EXPOSE 9876
+VOLUME /app/
+
+ENTRYPOINT ["npx"]
+
+CMD ["npm", "start"]
+
+
+FROM nginx:1.15.0
+
+ARG CONTEXT=nginx
+
+RUN mkdir -p -m 777 /tmp/sockets/; \
+    chmod 777 /var/cache/nginx/;
+
+VOLUME ["/tmp/sockets/"]
+
+EXPOSE "8080"
+
+COPY $CONTEXT/config /etc/nginx
+COPY --from=angular /app/dist/hela-ng /var/www/ng
+COPY ./docker/nginx-entrypoint.sh ./docker-entrypoint.sh
+
+ENTRYPOINT ["bash", "docker-entrypoint.sh"]
+CMD ["nginx"]

@@ -1,0 +1,70 @@
+version: "3.7"
+
+services:
+  nginx:
+    build:
+      context: "."
+      dockerfile: "docker/Dockerfile.nginx"
+    image: "big-brother-nginx:latest"
+    user: "$DOCKER_USER"
+    environment:
+      NGINX_CONFIG: "nginx.dev.conf"
+    ports:
+      - "127.0.0.1:80:8080"
+    volumes:
+      - "sockets:/tmp/sockets"
+    restart: "on-failure"
+
+  django:
+    build:
+      context: "."
+      dockerfile: "docker/Dockerfile.django"
+    image: "big-brother-django:latest"
+    command: "uwsgi"
+    user: "$DOCKER_USER"
+    environment:
+      UWSGI_PROCESSES: 1
+      UWSGI_THREADS: 4
+      UWSGI_HARAKIRI: 60
+      UWSGI_MAX_REQUESTS: 100
+      DJANGO_APP_NAME: "big_brother"
+      DJANGO_SECRET_KEY: "+5%ou)a=3h(_jn@75pe43q#7=)c66*665x96trum5yb#9ze5=d"
+      DJANGO_DEBUG: "True"
+      DJANGO_ALLOWED_HOSTS: "localhost"
+      DJANGO_LOGGING_LEVEL: "DEBUG"
+      DJANGO_DATABASE_NAME: "pgdb"
+      DJANGO_DATABASE_USER: "pguser"
+      DJANGO_DATABASE_PASSWORD: "pgpassword"
+      DJANGO_DATABASE_HOST: "postgres"
+      DJANGO_DATABASE_PORT: "5432"
+    volumes:
+      - "./django:/app"
+      - "sockets:/tmp/sockets"
+    restart: "on-failure"
+
+  angular:
+    build:
+      context: "."
+      dockerfile: "docker/Dockerfile.nginx"
+      target: "angular"
+    user: "$DOCKER_USER"
+    volumes:
+      - "./angular:/app"
+    init: true
+    restart: "on-failure"
+
+  postgres:
+    image: "postgres:10.4"
+    user: "$DOCKER_USER"
+    volumes:
+      - "postgres-data:/var/lib/postgresql/data"
+    environment:
+      - "PGDATA=/var/lib/postgresql/data/pgdata"
+      - "POSTGRES_DB=pgdb"
+      - "POSTGRES_USER=pguser"
+      - "POSTGRES_PASSWORD=pgpassword"
+    restart: "on-failure"
+
+volumes:
+  postgres-data:
+  sockets:

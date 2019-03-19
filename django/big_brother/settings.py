@@ -14,19 +14,16 @@ import os
 from datetime import timedelta
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
-BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-
-
-# Quick-start development settings - unsuitable for production
-# See https://docs.djangoproject.com/en/2.1/howto/deployment/checklist/
+BASE_DIR = os.path.dirname(os.path.dirname(__file__))
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = '+5%ou)a=3h(_jn@75pe43q#7=)c66*665x96trum5yb#9ze5=d'
+SECRET_KEY = os.environ['DJANGO_SECRET_KEY']
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = (os.environ['DJANGO_DEBUG'] == 'True')
 
-ALLOWED_HOSTS = []
+# Allowed hosts
+ALLOWED_HOSTS = [x.strip() for x in os.environ['DJANGO_ALLOWED_HOSTS'].split(',')]
 
 
 # Application definition
@@ -85,10 +82,15 @@ SIMPLE_JWT = {
 # Database
 # https://docs.djangoproject.com/en/2.1/ref/settings/#databases
 
+
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': os.environ['DJANGO_DATABASE_NAME'],
+        'USER': os.environ['DJANGO_DATABASE_USER'],
+        'PASSWORD': os.environ['DJANGO_DATABASE_PASSWORD'],
+        'HOST': os.environ['DJANGO_DATABASE_HOST'],
+        'PORT': os.environ['DJANGO_DATABASE_PORT'],
     }
 }
 
@@ -115,6 +117,42 @@ AUTH_PASSWORD_VALIDATORS = [
         'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',
     },
 ]
+
+
+# Logging
+# https://docs.djangoproject.com/en/2.1/topics/logging/
+
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': False,
+    'formatters': {
+        'default': {
+            'format': ('%(asctime)s'
+                       ' | %(levelname)-8s'
+                       ' | %(name)s'
+                       ' | %(message)s'),
+        },
+    },
+    'handlers': {
+        'console': {
+            'class': 'logging.StreamHandler',
+            'filters': ['testing'],
+            'formatter': 'default',
+        },
+    },
+    'loggers': {
+        '': {
+            'level': 'WARNING',
+            'handlers': ['console'],
+            'propagate': False,
+        },
+        'project_manager': {
+            'level': os.environ['DJANGO_LOGGING_LEVEL'],
+            'handlers': ['console'],
+            'propagate': False,
+        },
+    },
+}
 
 
 # Internationalization

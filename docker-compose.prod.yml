@@ -1,0 +1,57 @@
+version: "3.7"
+
+services:
+  nginx:
+    image: "big-brother-nginx:latest"
+    user: "$DOCKER_USER"
+    environment:
+      VIRTUAL_HOST: "$VIRTUAL_HOST"
+      VIRTUAL_PORT: "8080"
+    volumes:
+      - "sockets:/tmp/sockets"
+    depends_on:
+      - "django"
+    restart: "always"
+
+  django:
+    image: "big-brother-django:latest"
+    command: "uwsgi"
+    user: "$DOCKER_USER"
+    environment:
+      UWSGI_PROCESSES: "$DJANGO_UWSGI_PROCESSES"
+      UWSGI_THREADS: "$DJANGO_UWSGI_THREADS"
+      UWSGI_HARAKIRI: "$DJANGO_UWSGI_HARAKIRI"
+      UWSGI_MAX_REQUESTS: "$DJANGO_UWSGI_MAX_REQUESTS"
+      DJANGO_APP_NAME: "hela"
+      DJANGO_SECRET_KEY: "$DJANGO_SECRET_KEY"
+      DJANGO_DEBUG: "False"
+      DJANGO_ALLOWED_HOSTS: "$DJANGO_ALLOWED_HOSTS"
+      DJANGO_LOGGING_LEVEL: "INFO"
+      DJANGO_DATABASE_NAME: "pgdb"
+      DJANGO_DATABASE_USER: "pguser"
+      DJANGO_DATABASE_PASSWORD: "pgpassword"
+      DJANGO_DATABASE_HOST: "postgres"
+      DJANGO_DATABASE_PORT: "5432"
+    volumes:
+      - "sockets:/tmp/sockets"
+    restart: "always"
+
+  redis:
+    image: "redis:5.0.1"
+    restart: "always"
+
+  postgres:
+    image: "postgres:10.4"
+    user: "$DOCKER_USER"
+    volumes:
+      - "postgres-data:/var/lib/postgresql/data"
+    environment:
+      - "PGDATA=/var/lib/postgresql/data/pgdata"
+      - "POSTGRES_DB=pgdb"
+      - "POSTGRES_USER=pguser"
+      - "POSTGRES_PASSWORD=pgpassword"
+    restart: "always"
+
+volumes:
+  postgres-data:
+  sockets:

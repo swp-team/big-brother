@@ -1,0 +1,34 @@
+FROM python:3.7
+
+ARG CONTEXT=django
+
+WORKDIR /app/
+
+COPY $CONTEXT/requirements.txt .
+RUN set -e; \
+    pip install --no-cache uwsgi; \
+    pip install --no-cache -r requirements.txt
+
+COPY $CONTEXT /app/
+
+VOLUME ["/tmp/sockets/"]
+
+COPY ./docker/django-entrypoint.sh /docker/docker-entrypoint.sh
+
+ENTRYPOINT ["bash", "/docker/docker-entrypoint.sh"]
+
+CMD ["uwsgi"]
+
+ENV DJANGO_APP_NAME \
+    DJANGO_SECRET_KEY \
+    DJANGO_DEBUG \
+    DJANGO_ALLOWED_HOSTS \
+    DJANGO_DATABASE_NAME \
+    DJANGO_DATABASE_USER \
+    DJANGO_DATABASE_PASSWORD \
+    DJANGO_DATABASE_HOST \
+    DJANGO_DATABASE_PORT \
+    UWSGI_PROCESSES \
+    UWSGI_THREADS \
+    UWSGI_HARAKIRI \
+    UWSGI_MAX_REQUESTS
