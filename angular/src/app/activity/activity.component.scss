@@ -1,0 +1,145 @@
+:host {
+  display: block;
+}
+
+.content {
+  margin: auto;
+  width: 700px;
+  padding: 36px 12px;
+  display: flex;
+  flex-direction: column;
+}
+
+.input input {
+  width: 100%;
+}
+
+.activities {
+  margin-top: 24px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.activity {
+  --height: 36px;
+  --width: 600px;
+  --color: purple;
+  color: var(--color);
+  display: flex;
+  align-items: center;
+  border-radius: calc(var(--height) / 2);
+  padding-left: calc(var(--height) * 0.75);
+  height: var(--height);
+  width: var(--width);
+  position: relative;
+  cursor: pointer;
+  user-select: none;
+}
+.activity:before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 100%;
+  right: 0;
+  height: 100%;
+  z-index: -1;
+  background: currentColor;
+  opacity: 0;
+  transition: left 100ms ease,
+              border-radius 100ms ease,
+              opacity 75ms ease-in;
+  border-radius: 50% calc(var(--height) / 2) calc(var(--height) / 2) 50%;
+}
+.activity:hover:before {
+  left: calc(var(--height) / 2);
+  opacity: 1;
+  border-radius: 4px calc(var(--height) / 2) calc(var(--height) / 2) 4px;
+  transition: left 200ms ease-in,
+              border-radius 200ms ease-in,
+              opacity 200ms ease-in;
+}
+
+.activity__marker {
+  border-radius: var(--height) 4px 4px var(--height);
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: calc(var(--height) / 2);
+  height: var(--height);
+  overflow: hidden;
+}
+.activity:not(:last-child) .activity__marker {
+  border-bottom-left-radius: 0;
+  border-bottom-right-radius: 0;
+}
+.activity:not(:last-child) .activity__marker:before {
+  border-bottom-right-radius: 0;
+}
+.activity:not(:first-child) .activity__marker {
+  border-top-left-radius: 0;
+  border-top-right-radius: 0;
+}
+.activity:not(:first-child) .activity__marker:before {
+  border-top-right-radius: 0;
+}
+.activity__marker:before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: calc(var(--height) / -2);
+  width: var(--height);
+  height: var(--height);
+  border-radius: 4px;
+  background: currentColor;
+  transition: border-radius 150ms 100ms ease, left 150ms ease;
+}
+.activity:hover .activity__marker:before {
+  border-radius: calc(var(--height) / 2);
+  left: calc(var(--height) * -1);
+  transition: border-radius 150ms ease, left 150ms 100ms ease;
+}
+
+.activity__info {
+  font-size: 1.3em;
+  color: rgba(0, 0, 0, 0.9);
+  transition: color 150ms linear;
+  max-width: calc(var(--width) - var(--height) * 3.5);
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  overflow: hidden;
+}
+.activity:hover .activity__info {
+  color: white;
+  transition: color 100ms 100ms linear;
+}
+
+.activity__time {
+  position: absolute;
+  right: calc(var(--height) * 2);
+  top: 0.56em;
+  font-size: 1em;
+  font-style: italic;
+  color: rgba(0, 0, 0, 0.9);
+  transition: color 150ms linear;
+}
+.activity:hover .activity__time {
+  color: white;
+  transition: color 100ms 100ms linear;
+}
+
+.activity__actions {
+  position: absolute;
+  top: 4.5px;
+  bottom: 0;
+  right: 8px;
+}
+.activity:hover .activity__actions {
+  --color: white;
+}
+.activity:hover .activity__actions > app-icon:hover {
+  --color: #ffffff77
+}
+.activity .activity__actions .activity__actions__cancel {
+  --color: white;
+}

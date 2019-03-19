@@ -1,0 +1,17 @@
+<div class="content">
+  <div class="input">
+    <input type="text" name="activity" [formControl]="activity" (keyup)="track($event)">
+  </div>
+
+  <div class="activities">
+    <div class="activity" *ngFor="let activity of history; let i=index">
+      <div class="activity__marker"></div>
+      <div class="activity__info">{{ activity.name }}</div>
+      <div class="activity__time">{{ activity.duration }}</div>
+      <div class="activity__actions">
+        <app-icon icon="done" *ngIf="!activity.end" (click)="stop()"></app-icon>
+        <app-icon class="activity__actions__cancel" icon="cancel" (click)="delete(i)"></app-icon>
+      </div>
+    </div>
+  </div>
+</div>
