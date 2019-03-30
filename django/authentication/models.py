@@ -3,10 +3,13 @@ from django.contrib.auth.models import (
     BaseUserManager,
     AbstractBaseUser,
 )
-from polymorphic.models import PolymorphicModel
+from polymorphic.models import (
+    PolymorphicManager,
+    PolymorphicModel,
+)
 
 
-class UserManager(BaseUserManager):
+class UserManager(BaseUserManager, PolymorphicManager):
     def create_user(self, **kwargs):
         if 'email' not in kwargs:
             raise ValueError("Users must have an email address")
