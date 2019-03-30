@@ -44,3 +44,32 @@ class Activity(models.Model):
     def clean(self):
         if self.end is not None and self.end <= self.start:
             raise ValidationError("End should be greater than start")
+
+
+class Course(models.Model):
+    name = models.CharField(max_length=200)
+    number_of_students = models.IntegerField()
+
+    faculties = models.ManyToManyField(
+        'Faculty',
+    )
+
+    students = models.ManyToManyField(
+        'Student',
+    )
+
+
+class Project(models.Model):
+    name = models.CharField(max_length=250)
+    number_of_students = models.IntegerField()
+    description = models.TextField()
+
+    participants = models.ForeignKey(
+        'Student',
+        on_delete=models.CASCADE,
+    )
+
+    course = models.ForeignKey(
+        'Course',
+        on_delete=models.CASCADE,
+    )
