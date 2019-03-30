@@ -3,6 +3,7 @@ from django.contrib.auth.models import (
     BaseUserManager,
     AbstractBaseUser,
 )
+from polymorphic.models import PolymorphicModel
 
 
 class UserManager(BaseUserManager):
@@ -31,7 +32,7 @@ class UserManager(BaseUserManager):
         return user
 
 
-class User(AbstractBaseUser):
+class User(AbstractBaseUser, PolymorphicModel):
     email = models.EmailField(unique=True)
     first_name = models.CharField(max_length=32)
     second_name = models.CharField(max_length=32)

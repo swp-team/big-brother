@@ -5,6 +5,13 @@ from django.core.exceptions import ValidationError
 
 from .validators import validate_distinct_list
 
+from authentication.models import User
+
+class Student(User):
+    pass
+
+class Faculty(User):
+    pass
 
 class Activity(models.Model):
     name = models.CharField(max_length=128)
@@ -19,7 +26,7 @@ class Activity(models.Model):
     )
 
     user = models.ForeignKey(
-        'authentication.User',
+        'Student',
         related_name='activities',
         on_delete=models.CASCADE,
     )
