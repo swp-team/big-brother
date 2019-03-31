@@ -2,7 +2,7 @@ services:
   - docker
 
 env:
-  - DOCKER_COMPOSE_VERSION=1.23.2
+  - DOCKER_COMPOSE_VERSION="1.23.2" DJANGO_SECRET_KEY="+5%ou)a=3h(_jn@75pe43q#7=)c66*665x96trum5yb#9ze5=d"
 
 before_install:
   - sudo rm /usr/local/bin/docker-compose
