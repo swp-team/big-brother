@@ -3,6 +3,9 @@ version: "3.7"
 services:
   nginx:
     image: "big-brother-nginx:latest"
+    build:
+      context: "."
+      dockerfile: "docker/Dockerfile.nginx"
     user: "$DOCKER_USER"
     environment:
       VIRTUAL_HOST: "$VIRTUAL_HOST"
@@ -15,6 +18,9 @@ services:
 
   django:
     image: "big-brother-django:latest"
+    build:
+      context: "."
+      dockerfile: "docker/Dockerfile.django"
     command: "uwsgi"
     user: "$DOCKER_USER"
     environment:
