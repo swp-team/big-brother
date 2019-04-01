@@ -13,4 +13,5 @@ before_install:
 
 script:
   - docker-compose build
-  # - docker-compose run --rm django python manage.py test
+  - docker-compose up -d
+  - docker-compose exec django python manage.py test
