@@ -1,22 +1,54 @@
-export interface Tag {
+export type Diff<T, E> = {
+  [K in Exclude<keyof T, E>]: T[K];
+};
+
+export interface Student {
+  id: number;
+  email: string;
+  first_name: string;
+  second_name: string;
+  is_active: boolean;
+  courses: number[];
+  projects: number;
+}
+
+export interface Faculty {
+  id: number;
+  email: string;
+  first_name: string;
+  second_name: string;
+  is_active: boolean;
+  courses: number[];
+}
+
+export interface Course {
   id: number;
   name: string;
+  number_of_students: number;
+  faculties: number[];
+  students: number[];
+}
+
+export interface Project {
+  id: number;
+  name: string,
+  number_of_students: number,
+  description: string,
+  participants: number[],
+  course: Course,
 }
 
 export interface RawActivity {
   id: number;
   name: string;
-  tags: number[];
-  start: string;
-  end: string;
-}
-
-export interface Activity {
-  id: number;
-  name: string;
-  tags: number[];
+  tags: string[];
+  project: number;
   start: Date;
   end: Date;
+  participants: number[];
+}
+
+export interface Activity extends RawActivity {
   duration: Duration;
 }
 
