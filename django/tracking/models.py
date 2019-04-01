@@ -25,10 +25,14 @@ class Activity(models.Model):
         size=8,
     )
 
-    user = models.ForeignKey(
-        'Student',
+    project = models.ForeignKey(
+        'Project',
         related_name='activities',
         on_delete=models.CASCADE,
+    )
+
+    participants = models.ManyToManyField(
+        'Student',
     )
 
     class Meta:
