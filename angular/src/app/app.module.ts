@@ -13,6 +13,7 @@ import { ApiService } from '@app/api.service';
 import { AuthInterceptor } from '@app/auth.interceptor';
 import { AppComponent } from '@app/app.component';
 import { LoginComponent } from '@app/login/login.component';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 @NgModule({
   declarations: [
@@ -25,6 +26,8 @@ import { LoginComponent } from '@app/login/login.component';
     HttpClientModule,
 
     AppRoutingModule,
+
+    BrowserAnimationsModule,
   ],
   providers: [
     ApiService,
