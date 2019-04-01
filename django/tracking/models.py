@@ -64,12 +64,12 @@ class Project(models.Model):
     number_of_students = models.IntegerField()
     description = models.TextField()
 
-    participants = models.ForeignKey(
+    participants = models.ManyToManyField(
         'Student',
-        on_delete=models.CASCADE,
     )
 
     course = models.ForeignKey(
         'Course',
+        related_name='projects',
         on_delete=models.CASCADE,
     )
