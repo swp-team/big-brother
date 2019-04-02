@@ -65,10 +65,10 @@ class ActivityAPITestCase(APITestCase):
             password='qwerty123',
         )
 
-    def test_empty_activities_list(self):
+    def test_empty_faculties(self):
         response = self.get_response(
-            'tracking:activity-list',
-            user=self.user,
+            'tracking:faculty-list',
+            self.user,
         )
 
         self.assertEqual(status.HTTP_200_OK, response.status_code)
