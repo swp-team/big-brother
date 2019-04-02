@@ -1,7 +1,7 @@
 from rest_framework import serializers
 from rest_framework.exceptions import ValidationError
 
-from .models import Activity
+from .models import Activity, Faculty, Student, Course, Project
 
 
 class ActivitySerializer(serializers.ModelSerializer):
@@ -23,3 +23,31 @@ class ActivitySerializer(serializers.ModelSerializer):
                     'end': "End should be greater than start"
                 })
         return data
+
+
+class FacultySerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Faculty
+        fields = ('id', 'email', 'first_name', 'second_name')
+        read_only_fields = ('id', )
+
+
+class StudentSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Student
+        fields = ('id', 'email', 'first_name', 'second_name')
+        read_only_fields = ('id', )
+
+
+class CourseSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Course
+        fields = ('id', 'name', 'number_of_students', 'faculties', 'students')
+        read_only_fields = ('id', )
+
+
+class ProjectSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Project
+        fields = ('id', 'name', 'number_of_students', 'participants', 'course')
+        read_only_fields = ('id', )

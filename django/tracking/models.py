@@ -7,11 +7,14 @@ from .validators import validate_distinct_list
 
 from authentication.models import User
 
+
 class Student(User):
     pass
 
+
 class Faculty(User):
     pass
+
 
 class Activity(models.Model):
     name = models.CharField(max_length=128)
@@ -56,10 +59,12 @@ class Course(models.Model):
 
     faculties = models.ManyToManyField(
         'Faculty',
+        related_name='courses',
     )
 
     students = models.ManyToManyField(
         'Student',
+        related_name='courses',
     )
 
 
