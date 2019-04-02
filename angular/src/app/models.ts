@@ -7,9 +7,6 @@ export interface Student {
   email: string;
   first_name: string;
   second_name: string;
-  is_active: boolean;
-  courses: number[];
-  projects: number;
 }
 
 export interface Faculty {
@@ -18,7 +15,6 @@ export interface Faculty {
   first_name: string;
   second_name: string;
   is_active: boolean;
-  courses: number[];
 }
 
 export interface Course {
@@ -35,7 +31,7 @@ export interface Project {
   number_of_students: number,
   description: string,
   participants: number[],
-  course: Course,
+  course: number,
 }
 
 export interface RawActivity {

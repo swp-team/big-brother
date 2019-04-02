@@ -6,18 +6,18 @@
     <mat-toolbar>Menu</mat-toolbar>
     <mat-nav-list>
       <h3 matSubheader>Courses</h3>
-      <a mat-list-item
-         *ngFor="let course of activities$ | async"
-         [routerLink]="'course/' + course.id">
+      <mat-list-item
+        *ngFor="let course of courses$ | async"
+        [routerLink]="['/course', course.id]">
         {{ course.name }}
-      </a>
+      </mat-list-item>
       <mat-divider></mat-divider>
       <h3 matSubheader>Projects</h3>
-      <a mat-list-item
-         *ngFor="let project of activities$ | async"
-         [routerLink]="'project/' + project.id">
+      <mat-list-item
+        *ngFor="let project of projects$ | async"
+        [routerLink]="['/project', project.id]">
         {{ project.name }}
-      </a>
+      </mat-list-item>
     </mat-nav-list>
   </mat-sidenav>
   <mat-sidenav-content>

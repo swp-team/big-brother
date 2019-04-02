@@ -47,32 +47,32 @@ export class ApiService {
     return this.http.get<Student[]>('/api/students/');
   }
 
-  getStudent(id: number): Observable<Student[]> {
-    return this.http.get<Student[]>(`/api/students/${id}/`);
+  getStudent(id: number): Observable<Student> {
+    return this.http.get<Student>(`/api/students/${id}/`);
   }
 
   getFaculties(): Observable<Faculty[]> {
     return this.http.get<Faculty[]>('/api/faculties/');
   }
 
-  getFaculty(id: number): Observable<Faculty[]> {
-    return this.http.get<Faculty[]>(`/api/faculties/${id}/`);
+  getFaculty(id: number): Observable<Faculty> {
+    return this.http.get<Faculty>(`/api/faculties/${id}/`);
   }
 
   getCourses(): Observable<Course[]> {
     return this.http.get<Course[]>('/api/courses/');
   }
 
-  getCourse(id: number): Observable<Course[]> {
-    return this.http.get<Course[]>(`/api/courses/${id}/`);
+  getCourse(id: number): Observable<Course> {
+    return this.http.get<Course>(`/api/courses/${id}/`);
   }
 
   getProjects(): Observable<Project[]> {
     return this.http.get<Project[]>('/api/projects/');
   }
 
-  getProject(id: number): Observable<Project[]> {
-    return this.http.get<Project[]>(`/api/projects/${id}/`);
+  getProject(id: number): Observable<Project> {
+    return this.http.get<Project>(`/api/projects/${id}/`);
   }
 
   postProject(project: Diff<Project, 'id' | 'course'>)
@@ -85,6 +85,10 @@ export class ApiService {
       `/api/projects/${project.id}/`, project);
   }
 
+  deleteProject(id: number): Observable<any> {
+    return this.http.delete<Project>(`/api/projects/${id}/`);
+  }
+
   getActivities(): Observable<Activity[]> {
     return this.http.get<RawActivity[]>('/api/activities/').pipe(
       map(x => x.map(a => this._deserialize(a))),
@@ -93,13 +97,6 @@ export class ApiService {
 
   getActivity(id: number): Observable<Activity> {
     return this.http.get<RawActivity>(`/api/activities/${id}/`).pipe(
-      map(x => this._deserialize(x)),
-    );
-  }
-
-  postActivity(activity: Diff<Activity, 'id'>): Observable<Activity> {
-    return this.http.put<RawActivity>(
-      `/api/activities/`, activity).pipe(
       map(x => this._deserialize(x)),
     );
   }

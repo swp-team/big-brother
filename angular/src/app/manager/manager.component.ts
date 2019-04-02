@@ -5,7 +5,7 @@ import { Observable } from 'rxjs';
 import { map, filter } from 'rxjs/operators';
 
 import { ApiService } from '@app/api.service';
-import { Course, Project } from '@app/models';
+import { Course, Project, Faculty, Student } from '@app/models';
 
 @Component({
   selector: 'app-manager',
