@@ -1,27 +1,38 @@
 from django.db import models
 from django.db.models import Q, F
+from django.contrib.postgres.fields import ArrayField
 from django.core.exceptions import ValidationError
 
+from .validators import validate_distinct_list
 
-class Tag(models.Model):
-    name = models.CharField(max_length=32)
-    user = models.ForeignKey(
-        'authentication.User',
-        related_name='tags',
-        on_delete=models.CASCADE,
-    )
+from authentication.models import User
 
+class Student(User):
+    pass
+
+class Faculty(User):
+    pass
 
 class Activity(models.Model):
     name = models.CharField(max_length=128)
     start = models.DateTimeField()
     end = models.DateTimeField(null=True, blank=True)
-    tags = models.ManyToManyField(Tag, related_name='activities',
-                                  blank=True)
-    user = models.ForeignKey(
-        'authentication.User',
+
+    tags = ArrayField(
+        models.SlugField(max_length=32),
+        validators=[validate_distinct_list],
+        default=list,
+        size=8,
+    )
+
+    project = models.ForeignKey(
+        'Project',
         related_name='activities',
         on_delete=models.CASCADE,
+    )
+
+    participants = models.ManyToManyField(
+        'Student',
     )
 
     class Meta:
@@ -34,17 +45,35 @@ class Activity(models.Model):
             ),
         ]
 
+    def clean(self):
+        if self.end is not None and self.end <= self.start:
+            raise ValidationError("End should be greater than start")
 
-class ActivityTagBinding(models.Model):
-    tag = models.ForeignKey(Tag, on_delete=models.CASCADE)
-    activity = models.ForeignKey(Activity, on_delete=models.CASCADE)
 
-    class Meta:
-        unique_together = ('tag', 'activity')
+class Course(models.Model):
+    name = models.CharField(max_length=200)
+    number_of_students = models.IntegerField()
 
-    def save(self, *args, **kwargs):
-        if self.tag.user_id != self.activity.user_id:
-            raise ValidationError(
-                "Tag's user should be the same as activity's user"
-            )
-        return super().save(*args, **kwargs)
+    faculties = models.ManyToManyField(
+        'Faculty',
+    )
+
+    students = models.ManyToManyField(
+        'Student',
+    )
+
+
+class Project(models.Model):
+    name = models.CharField(max_length=250)
+    number_of_students = models.IntegerField()
+    description = models.TextField()
+
+    participants = models.ManyToManyField(
+        'Student',
+    )
+
+    course = models.ForeignKey(
+        'Course',
+        related_name='projects',
+        on_delete=models.CASCADE,
+    )

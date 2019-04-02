@@ -39,6 +39,7 @@ INSTALLED_APPS = [
     # Project apps
     'authentication',
     'tracking',
+    'polymorphic',
 ]
 
 MIDDLEWARE = [
