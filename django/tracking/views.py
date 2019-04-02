@@ -35,10 +35,10 @@ class FacultyEndpoint(ModelViewSet):
     def get_queryset(self):
         if isinstance(self.request.user, Student):
             return Faculty.objects.filter(
-                courses_students=self.request.user)
+                courses__students=self.request.user)
         elif isinstance(self.request.user, Faculty):
             return Faculty.objects.filter(
-                courses_faculties=self.request.user)
+                courses__faculties=self.request.user)
         return Faculty.objects.none()
 
 
@@ -49,10 +49,10 @@ class StudentEndpoint(ModelViewSet):
     def get_queryset(self):
         if isinstance(self.request.user, Student):
             return Student.objects.filter(
-                courses_students=self.request.user)
+                courses__students=self.request.user)
         elif isinstance(self.request.user, Faculty):
             return Student.objects.filter(
-                courses_faculties=self.request.user)
+                courses__faculties=self.request.user)
         return Student.objects.none()
 
 
