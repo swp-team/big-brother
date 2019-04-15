@@ -4,13 +4,17 @@ from django.test import TestCase
 from django.urls import reverse
 from django.utils import timezone
 from django.db import IntegrityError
+from django.forms.models import model_to_dict
+from  django.core import serializers
 
 from rest_framework import status
 from rest_framework.test import APITestCase
 
+import json
+
 from authentication.models import User
 
-from .models import Activity, Student
+from .models import Activity, Student, Faculty, Course, Project
 
 
 class ActivityModelTestCase(TestCase):
@@ -58,7 +62,6 @@ class PermissionTest(APITestCase):
         return self.client.post(url, data, format=format)
 
     def setUp(self):
-        Student.objects
         self.first_user = Student.objects.create_user(
             email='daniel@example.com',
             first_name="Daniel",
@@ -72,6 +75,19 @@ class PermissionTest(APITestCase):
             second_name="Staff",
             password='qwerty123',
         )
+        self.faculty = Faculty.objects.create_user(
+            email='ivan@example.com',
+            first_name="Ivan",
+            second_name="Pavlov",
+            password='qwerty123',
+        )
+
+        self.course = Course.objects.create(
+            name="SWP Course",
+            number_of_students=110,
+        )
+        self.course.faculties.set([self.faculty])
+        self.course.students.set([self.first_user])
 
     def test_get_for_admins(self):
         response = self.get_response(
@@ -87,9 +103,8 @@ class PermissionTest(APITestCase):
             'tracking:faculty-list',
             self.first_user,
         )
-
         self.assertEqual(status.HTTP_200_OK, response.status_code)
-        self.assertEqual(0, len(response.data))
+        self.assertEqual(1, len(response.data))
 
     def test_post_for_admins(self):
         response = self.post_response(
@@ -118,6 +133,15 @@ class PermissionTest(APITestCase):
         )
         self.assertEqual(status.HTTP_403_FORBIDDEN, response.status_code)
         self.assertEqual(1, len(response.data))
+
+    def test_get_for_faculties(self):
+        response = self.get_response(
+            'tracking:project-list',
+            self.first_user,
+        )
+
+        self.assertEqual(status.HTTP_200_OK, response.status_code)
+        self.assertEqual(0, len(response.data))
 
 
 class ActivityAPITestCase(APITestCase):
