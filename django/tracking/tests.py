@@ -37,7 +37,7 @@ class ActivityModelTestCase(TestCase):
             )
 
 
-class PermissionTest(TestCase):
+class PermissionTest(APITestCase):
     def get_response(self, url, user=None, kwargs=None):
         if kwargs is None:
             kwargs = {}
@@ -58,6 +58,7 @@ class PermissionTest(TestCase):
         return self.client.post(url, data, format=format)
 
     def setUp(self):
+        Student.objects
         self.first_user = Student.objects.create_user(
             email='daniel@example.com',
             first_name="Daniel",
@@ -74,7 +75,7 @@ class PermissionTest(TestCase):
 
     def test_get_for_admins(self):
         response = self.get_response(
-            'api/faculties',
+            'tracking:faculty-list',
             self.admin,
         )
 
@@ -83,7 +84,7 @@ class PermissionTest(TestCase):
 
     def test_get_for_non_admins(self):
         response = self.get_response(
-            'api/faculties',
+            'tracking:faculty-list',
             self.first_user,
         )
 
@@ -92,21 +93,31 @@ class PermissionTest(TestCase):
 
     def test_post_for_admins(self):
         response = self.post_response(
-            'api/faculties',
+            'tracking:faculty-list',
             self.admin,
+            data={
+            'email': 'andrew@example.com',
+            'first_name':"Andrew",
+            'second_name':"Scott",
+            'password':'qwerty123',
+            }
         )
-
-        self.assertEqual(status.HTTP_200_OK, response.status_code)
-        self.assertEqual(0, len(response.data))
+        self.assertEqual(status.HTTP_201_CREATED, response.status_code)
+        self.assertEqual(4, len(response.data))
 
     def test_post_for_non_admins(self):
         response = self.post_response(
-            'api/faculties',
+            'tracking:faculty-list',
             self.first_user,
+            data={
+                'email': 'andrew@example.com',
+                'first_name': "Andrew",
+                'second_name': "Scott",
+                'password': 'qwerty123',
+            }
         )
-
-        self.assertEqual(status.HTTP_200_OK, response.status_code)
-        self.assertEqual(0, len(response.data))
+        self.assertEqual(status.HTTP_403_FORBIDDEN, response.status_code)
+        self.assertEqual(1, len(response.data))
 
 
 class ActivityAPITestCase(APITestCase):
