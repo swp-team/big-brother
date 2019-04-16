@@ -49,5 +49,5 @@ class CourseSerializer(serializers.ModelSerializer):
 class ProjectSerializer(serializers.ModelSerializer):
     class Meta:
         model = Project
-        fields = ('id', 'name', 'participants', 'course')
+        fields = ('id', 'name', 'description', 'participants', 'course')
         read_only_fields = ('id', )
