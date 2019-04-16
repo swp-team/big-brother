@@ -24,9 +24,6 @@ class ActivityViewSet(ModelViewSet):
                 project__course__faculties=self.request.user)
         return Activity.objects.none()
 
-    def perform_create(self, serializer):
-        serializer.save(user=self.request.user)
-
 
 class FacultyEndpoint(ModelViewSet):
     serializer_class = FacultySerializer
