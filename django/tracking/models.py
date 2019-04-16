@@ -55,7 +55,6 @@ class Activity(models.Model):
 
 class Course(models.Model):
     name = models.CharField(max_length=200)
-    number_of_students = models.IntegerField()
 
     faculties = models.ManyToManyField(
         'Faculty',
@@ -70,7 +69,6 @@ class Course(models.Model):
 
 class Project(models.Model):
     name = models.CharField(max_length=250)
-    number_of_students = models.IntegerField()
     description = models.TextField()
 
     participants = models.ManyToManyField(
