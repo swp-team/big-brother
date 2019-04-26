@@ -82,6 +82,13 @@ class PermissionTest(APITestCase):
             password='qwerty123',
         )
 
+        self.secondFaculty = Faculty.objects.create_user(
+            email='petr@example.com',
+            first_name="petr",
+            second_name="petrov",
+            password='qwerty123',
+        )
+
         self.course = Course.objects.create(
             name="SWP Course",
             number_of_students=110,
@@ -137,11 +144,28 @@ class PermissionTest(APITestCase):
     def test_get_for_faculties(self):
         response = self.get_response(
             'tracking:project-list',
-            self.first_user,
+            self.faculty,
         )
 
         self.assertEqual(status.HTTP_200_OK, response.status_code)
         self.assertEqual(0, len(response.data))
+
+    def test_post_for_faculties(self):
+        studs = [self.first_user.id]
+        courses = self.course.id
+        response = self.post_response(
+            'tracking:project-list',
+            self.faculty,
+            data={
+                'name': 'SWP Project',
+                'number_of_students': 5,
+                'description': "Time tracking system",
+                'participants': studs,
+                'course': courses,
+            }
+        )
+        self.assertEqual(status.HTTP_201_CREATED, response.status_code)
+        self.assertEqual(5, len(response.data))
 
 
 class ActivityAPITestCase(APITestCase):

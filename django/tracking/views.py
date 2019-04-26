@@ -1,6 +1,6 @@
 from rest_framework.viewsets import ModelViewSet
 from rest_framework.permissions import IsAuthenticated
-from .permissions import StaffPermissions
+from .permissions import StaffPermissions, FacultyPermissions
 
 from .models import Activity, Faculty, Student, Course, Project
 from .serializers import (
@@ -65,13 +65,14 @@ class CourseEndpoint(ModelViewSet):
         if isinstance(self.request.user, Student):
             return Course.objects.filter(students=self.request.user)
         elif isinstance(self.request.user, Faculty):
+
             return Course.objects.filter(faculties=self.request.user)
         return Course.objects.none()
 
 
 class ProjectEndpoint(ModelViewSet):
     serializer_class = ProjectSerializer
-    permission_classes = (IsAuthenticated, )
+    permission_classes = (IsAuthenticated, FacultyPermissions, )
 
     def get_queryset(self):
         if isinstance(self.request.user, Student):
