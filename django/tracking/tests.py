@@ -1,4 +1,4 @@
-from datetime import timedelta
+from datetime import timedelta, datetime
 
 from django.test import TestCase
 from django.urls import reverse
@@ -96,6 +96,14 @@ class PermissionTest(APITestCase):
         self.course.faculties.set([self.faculty])
         self.course.students.set([self.first_user])
 
+        self.project = Project.objects.create(
+            name="TTS",
+            number_of_students=1,
+            description="Creating TTS",
+            course=self.course
+        )
+        self.project.participants.set([self.first_user])
+
     def test_get_for_admins(self):
         response = self.get_response(
             'tracking:faculty-list',
@@ -148,7 +156,7 @@ class PermissionTest(APITestCase):
         )
 
         self.assertEqual(status.HTTP_200_OK, response.status_code)
-        self.assertEqual(0, len(response.data))
+        self.assertEqual(1, len(response.data))
 
     def test_post_for_faculties(self):
         studs = [self.first_user.id]
@@ -166,6 +174,41 @@ class PermissionTest(APITestCase):
         )
         self.assertEqual(status.HTTP_201_CREATED, response.status_code)
         self.assertEqual(5, len(response.data))
+
+    def test_project_post_for_not_faculties(self):
+        studs = [self.first_user.id]
+        courses = self.course.id
+        response = self.post_response(
+            'tracking:project-list',
+            self.first_user,
+            data={
+                'name': 'SWP Project',
+                'number_of_students': 5,
+                'description': "Time tracking system",
+                'participants': studs,
+                'course': courses,
+            }
+        )
+        self.assertEqual(status.HTTP_403_FORBIDDEN, response.status_code)
+        self.assertEqual(1, len(response.data))
+
+    def test_activity_post_for_student(self):
+        studs = [self.first_user.id]
+        project_id =self.project.id
+        response = self.post_response(
+            'tracking:activity-list',
+            user=self.first_user,
+            data={
+                'name': 'Make tests',
+                'start': datetime(2019, 5, 27, 10, 35),
+                'end': datetime(2019, 5, 27, 15, 27),
+                'tags': ['tests'],
+                'project': project_id,
+                'participants': studs,
+            }
+        )
+        self.assertEqual(status.HTTP_201_CREATED, response.status_code)
+        self.assertEqual(7, len(response.data))
 
 
 class ActivityAPITestCase(APITestCase):

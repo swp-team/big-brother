@@ -1,6 +1,6 @@
 from rest_framework.viewsets import ModelViewSet
 from rest_framework.permissions import IsAuthenticated
-from .permissions import StaffPermissions, FacultyPermissions
+from .permissions import StaffPermissions, FacultyPermissions, StudentPermissions
 
 from .models import Activity, Faculty, Student, Course, Project
 from .serializers import (
@@ -14,7 +14,7 @@ from .serializers import (
 
 class ActivityViewSet(ModelViewSet):
     serializer_class = ActivitySerializer
-    permission_classes = (IsAuthenticated,)
+    permission_classes = (IsAuthenticated, StudentPermissions)
 
     def get_queryset(self):
         if isinstance(self.request.user, Student):
@@ -26,7 +26,7 @@ class ActivityViewSet(ModelViewSet):
         return Activity.objects.none()
 
     def perform_create(self, serializer):
-        serializer.save(user=self.request.user)
+        serializer.save()
 
 
 class FacultyEndpoint(ModelViewSet):
