@@ -91,14 +91,12 @@ class PermissionTest(APITestCase):
 
         self.course = Course.objects.create(
             name="SWP Course",
-            number_of_students=110,
         )
         self.course.faculties.set([self.faculty])
         self.course.students.set([self.first_user])
 
         self.project = Project.objects.create(
             name="TTS",
-            number_of_students=1,
             description="Creating TTS",
             course=self.course
         )
@@ -166,7 +164,6 @@ class PermissionTest(APITestCase):
             self.faculty,
             data={
                 'name': 'SWP Project',
-                'number_of_students': 5,
                 'description': "Time tracking system",
                 'participants': studs,
                 'course': courses,
@@ -183,7 +180,6 @@ class PermissionTest(APITestCase):
             self.first_user,
             data={
                 'name': 'SWP Project',
-                'number_of_students': 5,
                 'description': "Time tracking system",
                 'participants': studs,
                 'course': courses,
