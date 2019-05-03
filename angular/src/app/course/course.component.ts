@@ -49,7 +49,6 @@ export class CourseComponent implements OnInit {
       course: course.id,
       name: '',
       description: '',
-      number_of_students: 0,
       participants: [],
     };
 
@@ -59,8 +58,9 @@ export class CourseComponent implements OnInit {
     });
 
     dialogRef.afterClosed().subscribe(result => {
-      this.api.postProject(result).subscribe();
-      this.ngOnInit();
+      this.api.postProject(result).subscribe(
+        () => this.ngOnInit(),
+      );
     });
   }
 
@@ -71,8 +71,9 @@ export class CourseComponent implements OnInit {
     });
 
     dialogRef.afterClosed().subscribe(result => {
-      this.api.putProject(result).subscribe();
-      this.ngOnInit();
+      this.api.postProject(result).subscribe(
+        () => this.ngOnInit(),
+      );
     });
   }
 

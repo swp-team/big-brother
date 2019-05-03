@@ -11,6 +11,7 @@ import { ApiService } from '@app/api.service';
 })
 export class LoginComponent implements OnInit {
   login: FormGroup;
+  invalid = false;
 
   constructor(
     private fb: FormBuilder,
@@ -21,8 +22,7 @@ export class LoginComponent implements OnInit {
   ngOnInit() {
     this.login = this.fb.group({
       email: ['', [Validators.email, Validators.required]],
-      password: ['', [Validators.minLength(8),
-                      Validators.maxLength(16)]]
+      password: ['']
     });
   }
 
@@ -33,6 +33,10 @@ export class LoginComponent implements OnInit {
       this.login.get('password').value,
     ).subscribe(
       () => this.router.navigate(['/']),
+      () => {
+        this.invalid = true;
+        this.login.get('password').setValue('');
+      },
     );
   }
 

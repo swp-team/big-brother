@@ -131,6 +131,8 @@ export class ApiService {
     b.id = a.id;
     b.name = a.name;
     b.tags = a.tags;
+    b.project = a.project;
+    b.participants = a.participants;
     b.start = new Date(a.start);
     if (a.end !== null) {
       b.end = new Date(a.end);
@@ -144,6 +146,8 @@ export class ApiService {
     if (a.id !== null) b.id = a.id;
     b.name = a.name;
     b.tags = a.tags;
+    b.project = a.project;
+    b.participants = a.participants;
     b.start = formatDate(a.start, 'yyyy-MM-ddTHH:mm:ss\ZZ', 'en');
     if (a.end !== null) {
       b.end = formatDate(a.end, 'yyyy-MM-ddTHH:mm:ss\ZZ', 'en');

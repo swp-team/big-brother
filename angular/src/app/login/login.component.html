@@ -1,5 +1,9 @@
 <div class="wrapper mat-drawer-container">
   <form [formGroup]="login">
+    <mat-error *ngIf="invalid">
+      Invalid email or password
+    </mat-error>
+
     <mat-form-field>
       <input matInput placeholder="Email" type="email" formControlName="email">
     </mat-form-field>

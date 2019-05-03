@@ -20,7 +20,6 @@ export interface Faculty {
 export interface Course {
   id: number;
   name: string;
-  number_of_students: number;
   faculties: number[];
   students: number[];
 }
@@ -28,7 +27,6 @@ export interface Course {
 export interface Project {
   id: number;
   name: string,
-  number_of_students: number,
   description: string,
   participants: number[],
   course: number,
@@ -60,7 +58,7 @@ export class Duration {
     let time: number;
     if (timeOrDate instanceof Date) {
       if (end === null) time = Duration.timeFrom(timeOrDate);
-      else time = Duration.timeBetween(timeOrDate, end);
+      else time = Duration.timeBetween(end, timeOrDate);
     } else {
       time = timeOrDate;
     }
