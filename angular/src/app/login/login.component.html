@@ -1,5 +1,17 @@
-<form [formGroup]="login">
-  <input placeholder="Email" type="email" formControlName="email">
-  <input placeholder="Password" type="password" formControlName="password">
-  <button (click)="onSubmit()">Log In</button>
-</form>
+<div class="wrapper mat-drawer-container">
+  <form [formGroup]="login">
+    <mat-error *ngIf="invalid">
+      Invalid email or password
+    </mat-error>
+
+    <mat-form-field>
+      <input matInput placeholder="Email" type="email" formControlName="email">
+    </mat-form-field>
+    <mat-form-field>
+      <input matInput placeholder="Password" type="password" formControlName="password">
+    </mat-form-field>
+    <button mat-button color="primary" (click)="onSubmit()">
+      Log In<mat-icon>arrow_right</mat-icon>
+    </button>
+  </form>
+</div>

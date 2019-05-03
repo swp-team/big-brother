@@ -26,7 +26,7 @@ export class AuthInterceptor implements HttpInterceptor {
     request = this._addHeader(request);
     return next.handle(request).pipe(
       catchError((res: HttpErrorResponse) => {
-        if (res.status === 401) {
+        if (res.status === 401 && !res.url.includes('api/tokens')) {
           return this.api.postRefreshTokens().pipe(
             flatMap(() => next.handle(
               this._addHeader(request))),

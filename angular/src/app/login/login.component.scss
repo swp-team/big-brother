@@ -1,4 +1,4 @@
-:host {
+.wrapper {
   display: flex;
   justify-content: center;
   align-items: center;
@@ -7,6 +7,7 @@
 }
 
 form {
+  width: 280px;
   display: flex;
   flex-direction: column;
 }

@@ -1,22 +1,48 @@
-export interface Tag {
+export type Diff<T, E> = {
+  [K in Exclude<keyof T, E>]: T[K];
+};
+
+export interface Student {
+  id: number;
+  email: string;
+  first_name: string;
+  second_name: string;
+}
+
+export interface Faculty {
+  id: number;
+  email: string;
+  first_name: string;
+  second_name: string;
+  is_active: boolean;
+}
+
+export interface Course {
   id: number;
   name: string;
+  faculties: number[];
+  students: number[];
+}
+
+export interface Project {
+  id: number;
+  name: string,
+  description: string,
+  participants: number[],
+  course: number,
 }
 
 export interface RawActivity {
   id: number;
   name: string;
-  tags: number[];
-  start: string;
-  end: string;
-}
-
-export interface Activity {
-  id: number;
-  name: string;
-  tags: number[];
+  tags: string[];
+  project: number;
   start: Date;
   end: Date;
+  participants: number[];
+}
+
+export interface Activity extends RawActivity {
   duration: Duration;
 }
 
@@ -32,7 +58,7 @@ export class Duration {
     let time: number;
     if (timeOrDate instanceof Date) {
       if (end === null) time = Duration.timeFrom(timeOrDate);
-      else time = Duration.timeBetween(timeOrDate, end);
+      else time = Duration.timeBetween(end, timeOrDate);
     } else {
       time = timeOrDate;
     }

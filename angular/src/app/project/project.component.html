@@ -1,0 +1,52 @@
+<ng-container *ngIf="project$ | async as project">
+  <h1 class="mat-headline">{{ project.name }}</h1>
+  <mat-divider></mat-divider>
+
+  <div style="display: flex; align-items: center" *ngIf="!tracked$.value">
+    <mat-form-field style="width: 320px">
+      <input matInput placeholder="New Activity" #input>
+    </mat-form-field>
+    <mat-form-field style="margin-left: 16px; width: 320px">
+      <mat-label>Participants</mat-label>
+      <mat-select multiple #part>
+        <mat-option *ngFor="let student of students$ | async" [value]="student.id">
+          {{ student.first_name }} {{ student.second_name }}
+        </mat-option>
+      </mat-select>
+    </mat-form-field>
+    <button mat-icon-button color="accent" (click)="track(input.value, part.value);
+                                                    input.value = ''; part.value = [];">
+      <mat-icon>add</mat-icon>
+    </button>
+  </div>
+
+  <table mat-table [dataSource]="activities$ | async" class="mat-elevation-z8">
+    <ng-container matColumnDef="name">
+      <th mat-header-cell *matHeaderCellDef>Activity</th>
+      <td mat-cell *matCellDef="let element">{{ element.name }}</td>
+    </ng-container>
+
+    <ng-container matColumnDef="users">
+      <th mat-header-cell *matHeaderCellDef>Participants</th>
+      <td mat-cell *matCellDef="let element">
+        {{ participants$.value[element.id] }}
+      </td>
+    </ng-container>
+
+    <ng-container matColumnDef="time">
+      <th mat-header-cell *matHeaderCellDef>Time</th>
+      <td mat-cell *matCellDef="let element">
+        <span>{{ element.duration }}</span>
+
+        <ng-container *ngIf="element === tracked$.value">
+          <button mat-icon-button color="accent" (click)="stop()">
+            <mat-icon>stop</mat-icon>
+          </button>
+        </ng-container>
+      </td>
+    </ng-container>
+
+    <tr mat-header-row *matHeaderRowDef="['name', 'users', 'time']"></tr>
+    <tr mat-row *matRowDef="let row; columns: ['name', 'users', 'time'];"></tr>
+  </table>
+</ng-container>

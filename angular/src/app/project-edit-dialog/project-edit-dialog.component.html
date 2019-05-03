@@ -1,0 +1,20 @@
+<div mat-dialog-content>
+  <mat-form-field>
+    <input matInput [(ngModel)]="project.name" placeholder="Project">
+  </mat-form-field>
+  <mat-form-field>
+    <textarea matInput [(ngModel)]="project.description" placeholder="Description"></textarea>
+  </mat-form-field>
+  <mat-form-field>
+    <mat-label>Participants</mat-label>
+    <mat-select [(ngModel)]="project.participants" multiple>
+      <mat-option *ngFor="let student of students$ | async" [value]="student.id">
+        {{ student.first_name }} {{ student.second_name }}
+      </mat-option>
+    </mat-select>
+  </mat-form-field>
+</div>
+<div mat-dialog-actions>
+  <button mat-button color="warn" (click)="dialogRef.close()">Cancel</button>
+  <button mat-button color="accent" [mat-dialog-close]="project" cdkFocusInitial>Save</button>
+</div>
