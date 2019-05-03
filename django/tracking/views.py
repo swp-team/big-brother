@@ -2,6 +2,11 @@ from rest_framework.viewsets import ModelViewSet
 from rest_framework.permissions import IsAuthenticated
 
 from .models import Activity, Faculty, Student, Course, Project
+from .permissions import (
+    StaffPermissions,
+    FacultyPermissions,
+    StudentPermissions,
+)
 from .serializers import (
     ActivitySerializer,
     FacultySerializer,
@@ -13,7 +18,7 @@ from .serializers import (
 
 class ActivityViewSet(ModelViewSet):
     serializer_class = ActivitySerializer
-    permission_classes = (IsAuthenticated,)
+    permission_classes = (IsAuthenticated, StudentPermissions)
 
     def get_queryset(self):
         if isinstance(self.request.user, Student):
@@ -27,7 +32,7 @@ class ActivityViewSet(ModelViewSet):
 
 class FacultyEndpoint(ModelViewSet):
     serializer_class = FacultySerializer
-    permission_classes = (IsAuthenticated, )
+    permission_classes = (IsAuthenticated, StaffPermissions,)
 
     def get_queryset(self):
         if isinstance(self.request.user, Student):
@@ -41,7 +46,7 @@ class FacultyEndpoint(ModelViewSet):
 
 class StudentEndpoint(ModelViewSet):
     serializer_class = StudentSerializer
-    permission_classes = (IsAuthenticated, )
+    permission_classes = (IsAuthenticated, StaffPermissions,)
 
     def get_queryset(self):
         if isinstance(self.request.user, Student):
@@ -55,19 +60,20 @@ class StudentEndpoint(ModelViewSet):
 
 class CourseEndpoint(ModelViewSet):
     serializer_class = CourseSerializer
-    permission_classes = (IsAuthenticated, )
+    permission_classes = (IsAuthenticated, StaffPermissions,)
 
     def get_queryset(self):
         if isinstance(self.request.user, Student):
             return Course.objects.filter(students=self.request.user)
         elif isinstance(self.request.user, Faculty):
+
             return Course.objects.filter(faculties=self.request.user)
         return Course.objects.none()
 
 
 class ProjectEndpoint(ModelViewSet):
     serializer_class = ProjectSerializer
-    permission_classes = (IsAuthenticated, )
+    permission_classes = (IsAuthenticated, FacultyPermissions, )
 
     def get_queryset(self):
         if isinstance(self.request.user, Student):

@@ -7,8 +7,8 @@ from .models import Activity, Faculty, Student, Course, Project
 class ActivitySerializer(serializers.ModelSerializer):
     class Meta:
         model = Activity
-        fields = ('id', 'name', 'project', 'participants', 'start', 'end',
-                  'tags')
+        fields = ('id', 'name', 'start', 'end', 'tags', 'project',
+                  'participants')
         read_only_fields = ('id',)
 
     def validate(self, data):
