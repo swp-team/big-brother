@@ -13,8 +13,10 @@ import { ApiService } from '@app/api.service';
 })
 export class ProjectComponent implements OnInit {
   project$ = new BehaviorSubject<Project>(null);
-  tracked$ = new BehaviorSubject<Activity>(null);
   allActivities$ = new BehaviorSubject<Activity[]>([]);
+  projectActivities$ = new BehaviorSubject<Activity[]>([]);
+  tracked$ = new BehaviorSubject<Activity[]>([]);
+  finished$ = new BehaviorSubject<Activity[]>([]);
   activities$ = new BehaviorSubject<Activity[]>([]);
   students$: Observable<Student[]>;
   timer: Subscription = null;
@@ -29,15 +31,30 @@ export class ProjectComponent implements OnInit {
       switchMap(x => this.api.getProject(+x.get('project'))),
     ).subscribe(x => this.project$.next(x));
 
-    const cleanTracked$ = this.tracked$.pipe(map(x => x === null ? [] : [x]));
     const cleanProject$ = this.project$.pipe(filter(x => x !== null));
 
     this.api.getActivities().subscribe(x => this.allActivities$.next(x));
 
-    combineLatest(this.project$,
-                  this.allActivities$,
-                  cleanTracked$).pipe(
-      map(([p, a, t]) => t.concat(a.filter(x => x.project === p.id))),
+    combineLatest(cleanProject$,
+                  this.allActivities$).pipe(
+      map(([p, a]) => a.filter(x => x.project === p.id)),
+    ).subscribe(x => this.projectActivities$.next(x));
+
+    this.projectActivities$.pipe(
+      map(x => x.filter(a => !a.end)),
+      tap(x => x.forEach(a => {
+        a.duration = new Duration(
+          Date.now() - a.start.getTime()
+        );
+      })),
+    ).subscribe(x => this.tracked$.next(x));
+
+    this.projectActivities$.pipe(
+      map(x => x.filter(a => a.end)),
+    ).subscribe(x => this.finished$.next(x));
+
+    combineLatest(this.tracked$, this.finished$).pipe(
+      map(([t, f]) => t.concat(f)),
     ).subscribe(x => this.activities$.next(x));
 
     this.students$ = combineLatest(
@@ -54,6 +71,15 @@ export class ProjectComponent implements OnInit {
               .join(', ')]
       ).reduce((acc, [id, ss]) => ({ [id]: ss, ...acc }), {})),
     ).subscribe(x => this.participants$.next(x));
+
+    this.timer = interval(1000).subscribe(() => {
+      const tracked = this.tracked$.value;
+      for (let i = 0; i < tracked.length; i++) {
+        tracked[i].duration = new Duration(
+          Date.now() - tracked[i].start.getTime()
+        );
+      }
+    });
   }
 
   track(name: string, participants: number[]) {
@@ -68,22 +94,18 @@ export class ProjectComponent implements OnInit {
       start: new Date(),
       tags: [],
     };
-    this.timer = interval(1000).subscribe(
-      () => a.duration = new Duration(Date.now() - a.start.getTime()),
-    );
-    this.tracked$.next(a);
-    this.api.postActivities(a).subscribe(x => a.id = x.id);
+    this.tracked$.next([a, ...this.tracked$.value]);
+    this.api.postActivities(a).subscribe(x => {
+      a.id = x.id;
+      this.activities$.next(this.activities$.value);
+    });
   }
 
-  stop() {
-    this.timer.unsubscribe();
-    this.timer = null;
-
-    this.tracked$.value.end = new Date();
-    this.api.putActivity(this.tracked$.value).pipe(
+  stop(a: Activity) {
+    a.end = new Date();
+    this.api.putActivity(a).pipe(
       switchMapTo(this.api.getActivities()),
     ).subscribe(x => this.allActivities$.next(x));
-    this.tracked$.next(null);
   }
 
 }
